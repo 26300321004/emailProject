@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import Navbar from "./components/shared/Navbar";
+
+import Inbox from "./components/Inbox";
+import Mail from "./components/Mail";
+import SendMail from "./components/SendMail";
+import Body from "./components/Body";
+import Login from "./components/Login";
+import { useSelector } from "react-redux";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Body />,
+    children: [
+      {
+        path: "/",
+        element: <Inbox />,
+      },
+      {
+        path: "/mail/:id",
+        element: <Mail />,
+      },
+    ],
+  },
+]);
 
 function App() {
+const {user} = useSelector(store=>store.appSlice)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="bg-[#F6F8FC] h-screen w-screen overflow-hidden">
+      {!user ? (
+        <Login />
+      ) : (
+        <>
+          <Navbar />
+          <RouterProvider router={router} />
+          <div className="absolute w-[35%]  bottom-0 right-20 z-10">
+            <SendMail />
+          </div>
+        </>
+      )}
     </div>
   );
 }
